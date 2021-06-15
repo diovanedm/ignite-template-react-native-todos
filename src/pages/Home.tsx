@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Header } from '../components/Header';
 import { MyTasksList } from '../components/MyTasksList';
@@ -26,13 +26,12 @@ export function Home() {
 
   function handleMarkTaskAsDone(id: number) {
     //TODO - mark task as done if exists
-    tasks.map(task => {
-      if(task.id == id){
-        task.done = !task.done        
-      }
-    })
-    setTasks(tasks)
-    console.log(tasks);
+    const taskChanged = tasks.map(task => task.id === id ? {
+      ...task,
+      done: !task.done
+    } : task);
+
+    setTasks(taskChanged);
   }
 
   function handleRemoveTask(id: number) {

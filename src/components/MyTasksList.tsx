@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, TouchableOpacity, View, Text, StyleSheet, FlatListProps } from 'react-native';
 
 function FlatListHeaderComponent() {
@@ -20,7 +20,7 @@ interface MyTasksListProps  {
 }
 
 export function MyTasksList({ tasks, onLongPress, onPress }: MyTasksListProps) {
-    
+  console.log(tasks);
   return (
     <FlatList
       data={tasks}
