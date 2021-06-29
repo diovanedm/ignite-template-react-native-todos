@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Image, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { Image, Platform, StyleSheet, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native';
 
 import checkIcon from '../assets/icons/Check.png';
+import { ThemeContext } from '../context/theme';
 
 interface TodoInputProps {
   addTask: (task: string) => void;
@@ -9,18 +10,23 @@ interface TodoInputProps {
 
 export function TodoInput({ addTask }: TodoInputProps) {
   const [task, setTask] = useState('');
+  const theme = useContext(ThemeContext)
 
   function handleAddNewTask() {
     //TODO - Call addTask and clean input value 
-    addTask(task)
+    if( task != "")
+      addTask(task)
+    else
+      ToastAndroid.show("Não pode ser inserido um campo vazio", ToastAndroid.LONG);
     setTask('')
   }
 
   return (
-    <View style={[styles.inputContainer, Platform.OS === 'ios' ? styles.inputIOSShadow : styles.inputAndroidShadow]}>
-      <TextInput 
-        style={styles.input} 
+    <View style={[styles.inputContainer, {backgroundColor: theme.backgroundInput}, Platform.OS === 'ios' ? styles.inputIOSShadow : styles.inputAndroidShadow]}>
+      <TextInput                
+        style={[styles.input, {color: theme.textTask}]}   
         placeholder="Adicionar novo todo..."
+        placeholderTextColor={theme.placeholder}
         returnKeyType="send"
         //TODO - use value, onChangeText and onSubmitEditing props
         onChangeText={setTask}
@@ -29,7 +35,7 @@ export function TodoInput({ addTask }: TodoInputProps) {
       <TouchableOpacity
         testID="add-new-task-button"
         activeOpacity={0.7}
-        style={styles.addButton}
+        style={[styles.addButton, {backgroundColor: theme.button}]}
         //TODO - onPress prop
         onPress={handleAddNewTask}
       >
@@ -41,7 +47,6 @@ export function TodoInput({ addTask }: TodoInputProps) {
 
 const styles = StyleSheet.create({
   inputContainer: {
-    backgroundColor: '#F5F4F8',
     borderRadius: 5,
     marginTop: -25,
     marginHorizontal: 40,
@@ -51,7 +56,6 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    backgroundColor: '#F5F4F8',
     paddingLeft: 12,
     borderTopLeftRadius: 5,
     borderBottomLeftRadius: 5,
@@ -69,7 +73,6 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   addButton: {
-    backgroundColor: '#3FAD27',
     height: 50,
     paddingHorizontal: 16,
     justifyContent: 'center',

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useEffect, useState, } from 'react';
+import { View } from 'react-native';
 import { Header } from '../components/Header';
 import { MyTasksList } from '../components/MyTasksList';
 import { TodoInput } from '../components/TodoInput';
-
+import { ThemeContext, themes } from '../context/theme'
 interface Task {
   id: number;
   title: string;
@@ -12,6 +12,11 @@ interface Task {
 
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [theme, setTheme] = useState(themes.light);
+
+  function handleChangeTheme() {
+    setTheme(theme == themes.light ? themes.dark : themes.light)
+  }
 
   function handleAddTask(newTaskTitle: string) {
     //TODO - add new task if it's not empty
@@ -41,16 +46,19 @@ export function Home() {
   } 
 
   return (
-    <>
-      <Header />
-      
-      <TodoInput addTask={handleAddTask} />
+  
+    <View style={{backgroundColor: theme.background, height: '100%'}}>
+      <ThemeContext.Provider value={theme}>
+        <Header setTheme={handleChangeTheme}/>
+        
+        <TodoInput addTask={handleAddTask} />
 
-      <MyTasksList 
-        tasks={tasks} 
-        onPress={handleMarkTaskAsDone} 
-        onLongPress={handleRemoveTask} 
-      />
-    </>
+        <MyTasksList 
+          tasks={tasks} 
+          onPress={handleMarkTaskAsDone} 
+          onLongPress={handleRemoveTask} 
+        />
+      </ThemeContext.Provider>
+    </View>
   )
 }
